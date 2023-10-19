@@ -1,5 +1,13 @@
 ## picgo-plugin-alist
 
+> 仓库分支说明 
+> 
+> 此分支基于原始功能开发，进行部分功能修复
+> 
+> 使用方法：下载打包好的 dist.zip 包，将里面的 dist 目录替换已安装好的 alist 插件的 dist 目录即可，alist 插件目录位置示例：C:\Users\index103000\AppData\Roaming\piclist\node_modules\picgo-plugin-alist
+>
+> 1、修复 fileName 中包含多级目录时，创建临时文件失败从而导致上传失败的bug。
+
 plugin for picgo
 
 通过alist实现对oneDrive、阿里云盘、天翼云盘、GoogleDrive、夸克网盘、迅雷云盘等的文件上传，并通过alist实现直链获取（alist可以处理动态直链问题），最终达成对上述各网盘的图床实现。
