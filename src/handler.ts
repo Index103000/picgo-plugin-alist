@@ -26,6 +26,10 @@ export const handle = async (ctx: PicGo): Promise<PicGo> => {
       const image = imgList[i].buffer
       const fileName = imgList[i].fileName
       const tempFilePath = nodePath.join(temporaryDirectory, fileName)
+      const dirName = nodePath.dirname(tempFilePath);
+      if (!fs.existsSync(dirName)) {
+        fs.mkdirSync(dirName, { recursive: true });
+      }
       ctx.log.info(`[信息]\{version:${version},uploadPath:${uploadPath},fileName:${fileName}\}`)
       try {
         fs.writeFileSync(tempFilePath, image)
@@ -60,6 +64,10 @@ export const handle = async (ctx: PicGo): Promise<PicGo> => {
       }
       try {
         fs.unlinkSync(tempFilePath)
+        ctx.log.info(`[信息]已经删除文件${tempFilePath}`);
+
+        // 删除可能为空的父目录，直到 temporaryDirectory
+        deleteEmptyDirectories(nodePath.dirname(tempFilePath), temporaryDirectory);
       }
       catch (err) {
         ctx.log.warn(`[删除缓存文件失败]文件${tempFilePath}，程序继续执行,ERROR:${err}`)
@@ -92,3 +100,17 @@ export const handle = async (ctx: PicGo): Promise<PicGo> => {
   }
   return ctx
 }
+
+const deleteEmptyDirectories = (dirPath, rootDir) => {
+  let currentDir = dirPath;
+
+  while (currentDir && currentDir !== rootDir) {
+    const files = fs.readdirSync(currentDir);
+    if (files.length === 0) {
+      fs.rmdirSync(currentDir);
+    } else {
+      break; // 目录不为空，停止删除
+    }
+    currentDir = nodePath.dirname(currentDir); // 上移一层目录
+  }
+};
